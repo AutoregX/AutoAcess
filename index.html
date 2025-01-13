@@ -4,37 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AccessLetter - OAuth 2.0</title>
+    <!-- Подключаем MSAL.js -->
     <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.20.0/dist/msal-browser.min.js"></script>
     <script>
+        // Конфигурация MSAL.js
         const msalConfig = {
             auth: {
                 clientId: "77417ba7-29b2-430e-a805-b81b72c79784",  // Ваш client_id
                 authority: "https://login.microsoftonline.com/c452bad9-c8b6-4018-9374-277d0469401e",  // Ваш tenant_id
-                redirectUri: "https://AutoregX.github.io/AutoAcess/"
+                redirectUri: "https://AutoregX.github.io/AutoAcess/"  // Укажите свой URI перенаправления
             }
         };
 
+        // Инициализация MSAL
         const msalInstance = new msal.PublicClientApplication(msalConfig);
 
+        // Запрос на логин с необходимыми правами
         const loginRequest = {
-            scopes: ["Mail.ReadWrite"]
+            scopes: ["Mail.ReadWrite"]  // Права доступа
         };
 
+        // Функция входа
         function signIn() {
             msalInstance.loginPopup(loginRequest)
                 .then(response => {
                     console.log('Signed in successfully:', response);
-                    // Обработка успешного входа
+                    getUserData(response.accessToken);
                 })
                 .catch(error => {
                     console.error('Error during sign-in:', error);
                 });
         }
+
+        // Функция получения данных пользователя через Microsoft Graph API
+        function getUserData(accessToken) {
+            const graphApiUrl = "https://graph.microsoft.com/v1.0/me/messages";  // API для получения сообщений
+            fetch(graphApiUrl, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('User mail data:', data);
+                displayEmails(data);
+            })
+            .catch(error => {
+                console.error('Error fetching mail data:', error);
+            });
+        }
+
+        // Функция отображения почты
+        function displayEmails(data) {
+            const mailContainer = document.getElementById("mailContainer");
+            if (data.value && data.value.length > 0) {
+                mailContainer.innerHTML = "<h2>Your Emails:</h2>";
+                data.value.forEach(mail => {
+                    mailContainer.innerHTML += `<p><strong>From:</strong> ${mail.from.emailAddress.address}</p><p><strong>Subject:</strong> ${mail.subject}</p><hr>`;
+                });
+            } else {
+                mailContainer.innerHTML = "<p>No messages found.</p>";
+            }
+        }
     </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a8a;
+        }
+        #mailContainer {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to AccessLetter!</h1>
     <p>Click the button below to sign in with your Microsoft account and access your mail.</p>
     <button onclick="signIn()">Login with Microsoft</button>
+
+    <div id="mailContainer"></div>
 </body>
 </html>
