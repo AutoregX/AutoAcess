@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccessLetter - OAuth 2.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a8a;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to AccessLetter!</h1>
+    <p>Click the button below to sign in with your Microsoft account and access your mail.</p>
+    <button onclick="window.location.href = 'https://login.microsoftonline.com/c452bad9-c8b6-4018-9374-277d0469401e/oauth2/v2.0/authorize?client_id=77417ba7-29b2-430e-a805-b81b72c79784&response_type=code&redirect_uri=https://AutoregX.github.io/AutoAcess/&scope=Mail.ReadWrite';">
+        Login with Microsoft
+    </button>
+</body>
+</html>
