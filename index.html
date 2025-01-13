@@ -24,17 +24,20 @@
             scopes: ["Mail.ReadWrite"]  // Права доступа
         };
 
-        // Функция входа
+        // Функция входа (с использованием редиректа)
         function signIn() {
-            msalInstance.loginPopup(loginRequest)
-                .then(response => {
-                    console.log('Signed in successfully:', response);
-                    getUserData(response.accessToken);
-                })
-                .catch(error => {
-                    console.error('Error during sign-in:', error);
-                });
+            msalInstance.loginRedirect(loginRequest);
         }
+
+        // Обработка ответа после редиректа
+        msalInstance.handleRedirectPromise().then((response) => {
+            if (response) {
+                console.log('Signed in successfully:', response);
+                getUserData(response.accessToken);
+            }
+        }).catch(error => {
+            console.error('Error during sign-in:', error);
+        });
 
         // Функция получения данных пользователя через Microsoft Graph API
         function getUserData(accessToken) {
