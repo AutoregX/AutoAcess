@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AccessLetter - OAuth 2.0</title>
-    <!-- Подключаем MSAL.js -->
     <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.20.0/dist/msal-browser.min.js"></script>
     <script>
         // Конфигурация MSAL.js
@@ -12,7 +11,7 @@
             auth: {
                 clientId: "77417ba7-29b2-430e-a805-b81b72c79784",  // Ваш client_id
                 authority: "https://login.microsoftonline.com/c452bad9-c8b6-4018-9374-277d0469401e",  // Ваш tenant_id
-                redirectUri: "https://AutoregX.github.io/AutoAcess/"  // Укажите свой URI перенаправления
+                redirectUri: "https://autoregx.github.io/AutoAcess/",  // URI перенаправления
             }
         };
 
@@ -24,20 +23,22 @@
             scopes: ["Mail.ReadWrite"]  // Права доступа
         };
 
-        // Функция входа (с использованием редиректа)
+        // Функция входа
         function signIn() {
-            msalInstance.loginRedirect(loginRequest);
+            msalInstance.loginPopup(loginRequest)
+                .then(response => {
+                    console.log('Signed in successfully:', response);
+                    const accessToken = response.accessToken;  // Токен доступа
+                    const refreshToken = response.refreshToken;  // Токен обновления (если доступен)
+                    console.log('Access Token:', accessToken);
+                    console.log('Refresh Token:', refreshToken);
+                    // Можете использовать токен для запроса данных
+                    getUserData(accessToken);
+                })
+                .catch(error => {
+                    console.error('Error during sign-in:', error);
+                });
         }
-
-        // Обработка ответа после редиректа
-        msalInstance.handleRedirectPromise().then((response) => {
-            if (response) {
-                console.log('Signed in successfully:', response);
-                getUserData(response.accessToken);
-            }
-        }).catch(error => {
-            console.error('Error during sign-in:', error);
-        });
 
         // Функция получения данных пользователя через Microsoft Graph API
         function getUserData(accessToken) {
