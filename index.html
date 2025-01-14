@@ -8,6 +8,8 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #121212; /* Темный фон */
+            color: white; /* Светлый текст */
             margin-top: 50px;
         }
         button {
@@ -16,18 +18,41 @@
             background-color: #0078D4;
             color: white;
             border: none;
-            cursor: pointer;
+            cursor: not-allowed; /* Изменим курсор на "не доступно" */
+            border-radius: 5px;
         }
         button:hover {
-            background-color: #005a8a;
+            background-color: #0078D4; /* Убираем изменение фона при наведении */
+        }
+        .image-container {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Расстояние между изображениями */
+        }
+        img {
+            width: 50px; /* Размер изображений */
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
     <h1>Welcome to AccessLetter!</h1>
-    <p>Click the button below to sign in with your Microsoft account and access your mail.</p>
-    <button onclick="window.location.href = 'https://login.microsoftonline.com/c452bad9-c8b6-4018-9374-277d0469401e/oauth2/v2.0/authorize?client_id=77417ba7-29b2-430e-a805-b81b72c79784&response_type=code&redirect_uri=https://autoregx.github.io/AutoAcess//&scope=Mail.ReadWrite';">
-        Login with Microsoft
+    <p>This page is required to obtain tokens</p>
+
+    <!-- Кнопка теперь неактивна -->
+    <button disabled>
+        The tokens have been received
     </button>
+
+    <!-- Место для изображений в ряд -->
+    <div class="image-container">
+        <img src="https://i.imgur.com/X4TuEIP.gif" alt="Image 1">
+        <img src="https://i.imgur.com/X4TuEIP.gif" alt="Image 2">
+        <img src="https://i.imgur.com/X4TuEIP.gif" alt="Image 3">
+    </div>
+
 </body>
 </html>
